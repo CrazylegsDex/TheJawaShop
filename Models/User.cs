@@ -27,7 +27,7 @@ namespace TheJawaShop.Models
         public string UserPassword { get; set; } = string.Empty;
 
         // Navigation properties to Product and Order
-        List<Product> Products { get; set; } = new List<Product>(); // 1:M Relationship
-        List<Order> Orders { get; set; } = new List<Order>(); // 1:M Relationship
+        public List<Product> Products { get; set; } = new List<Product>(); // 1:M Relationship
+        public List<Order> Orders { get; set; } = new List<Order>(); // 1:M Relationship
     }
 }

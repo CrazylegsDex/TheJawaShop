@@ -24,7 +24,7 @@ namespace TheJawaShop.Models
         [Required]
         [Display (Name = "Price")]
         [DataType (DataType.Currency)]
-        [Range (minimum: 50, maximum: 100000)]
+        [Range (minimum: 50, maximum: 100000.01)]
         public decimal ProductPrice { get; set; }
 
         // Foreign key to User
