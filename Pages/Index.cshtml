@@ -1,10 +1,42 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Login page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <!-- Header information -->
+    <h1 class="display-4">Welcome to The Jawa Shop</h1>
 </div>
+<p></p>
+<p><b>Please login or create your user account below</b></p>
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div class="form-group">
+                <!-- User Name Input -->
+                <label asp-for="TheUser.UserName" class="control-label"></label>
+                <input asp-for="TheUser.UserName" class="form-control" />
+                <span asp-validation-for="TheUser.UserName" class="text-danger"></span>
+            </div>
+            <p></p>
+            <div class="form-group">
+                <!-- User Password Input -->
+                <label asp-for="TheUser.UserPassword" class="control-label"></label>
+                <input asp-for="TheUser.UserPassword" class="form-control" />
+                <span asp-validation-for="TheUser.UserPassword" class="text-danger"></span>
+            </div>
+            <p></p>
+            <div class="form-group">
+                <!-- Two buttons for login and create user -->
+                <input type="submit" asp-page-handler="LoginUser" value="Login" class="btn btn-primary" />
+                <input type="submit" asp-page-handler="CreateUser" value="Create" class="btn btn-primary" />
+            </div>
+            <p></p>
+            <p>@Model.OutputMessage</p>
+        </form>
+    </div>
+</div>
+
+<!-- Javascript script that is called for validation -->
+@section Scripts { @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); } }
