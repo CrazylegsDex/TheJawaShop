@@ -31,11 +31,14 @@ namespace TheJawaShop.Pages.AdminPages
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Product == null || Product == null)
+          if (_context.Product == null || Product == null)
             {
                 return Page();
             }
 
+            // Set the Foreign key to the admin user
+            User adminUser = _context.User.Where(n => n.UserName == "admin").SingleOrDefault()!;
+            Product.UserId = adminUser.UserId;
             _context.Product.Add(Product);
             await _context.SaveChangesAsync();
 

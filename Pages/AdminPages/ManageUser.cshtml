@@ -1,0 +1,54 @@
+@page
+@model TheJawaShop.Pages.AdminPages.ManageUser
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<h1>User Management</h1>
+
+<p><a asp-page="CreateUser">Add New User</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                User Name
+            </th>
+            <th>
+                Number of Orders
+            </th>
+            <th>
+                Total Price
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var user in Model.TheUser) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => user.UserName)
+            </td>
+            <td>
+                @user.Orders.Count()
+            </td>
+            <td>
+                @{
+                    int total = 0;
+                    foreach (var transaction in user.Orders)
+                        total += transaction.OrderPrice;
+                    @total;
+                }
+            </td>
+            <td>
+                <a asp-page="./EditUser" asp-route-id="@user.UserId">Edit User</a> |
+                <a asp-page="./OrderDetails" asp-route-id="@user.UserId">View Orders</a> |
+                <a asp-page="./DeleteUser" asp-route-id="@user.UserId">Delete User</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<div>
+    <a asp-page="./Index">Back to Admin Page</a>
+</div>

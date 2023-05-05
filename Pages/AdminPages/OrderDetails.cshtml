@@ -1,0 +1,66 @@
+@page
+@model TheJawaShop.Pages.AdminPages.OrderDetails
+
+@{
+    ViewData["Title"] = "View Orders";
+}
+
+<h1>Order Details</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Order Date
+            </th>
+            <th>
+                Order Cost
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model.TheOrder) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => order.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.OrderDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.OrderPrice)
+            </td>
+        </tr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        Product Price
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var product in order.ProductOrders) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Product.ProductName)
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </tbody>
+</table>
+<p><a asp-page="ManageUser">Back to Users</a>

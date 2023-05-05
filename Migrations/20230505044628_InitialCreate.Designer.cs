@@ -11,13 +11,14 @@ using TheJawaShop.Models;
 namespace TheJawaShop.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230503220415_InitialCreate")]
+    [Migration("20230505044628_InitialCreate")]
     partial class InitialCreate
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.13");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.5");
 
             modelBuilder.Entity("TheJawaShop.Models.Order", b =>
                 {
@@ -27,6 +28,9 @@ namespace TheJawaShop.Migrations
 
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("OrderPrice")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");

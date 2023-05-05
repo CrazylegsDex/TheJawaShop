@@ -10,31 +10,31 @@ using TheJawaShop.Models;
 
 namespace TheJawaShop.Pages.AdminPages
 {
-    public class EditModel : PageModel
+    public class EditUser : PageModel
     {
         private readonly TheJawaShop.Models.DatabaseContext _context;
 
-        public EditModel(TheJawaShop.Models.DatabaseContext context)
+        public EditUser(TheJawaShop.Models.DatabaseContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Product Product { get; set; } = default!;
+        public User TheUser { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Product == null)
+            if (id == null || _context.User == null)
             {
                 return NotFound();
             }
 
-            var product =  await _context.Product.FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
+            var user =  await _context.User.FirstOrDefaultAsync(m => m.UserId == id);
+            if (user == null)
             {
                 return NotFound();
             }
-            Product = product;
+            TheUser = user;
            ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserName");
             return Page();
         }
@@ -43,10 +43,7 @@ namespace TheJawaShop.Pages.AdminPages
         // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
-            // Set the Foreign key to the admin user
-            User adminUser = _context.User.Where(n => n.UserName == "admin").SingleOrDefault()!;
-            Product.UserId = adminUser.UserId;
-            _context.Attach(Product).State = EntityState.Modified;
+            _context.Attach(TheUser).State = EntityState.Modified;
 
             try
             {
@@ -54,7 +51,7 @@ namespace TheJawaShop.Pages.AdminPages
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(Product.ProductId))
+                if (!UserExists(TheUser.UserId))
                 {
                     return NotFound();
                 }
@@ -64,12 +61,12 @@ namespace TheJawaShop.Pages.AdminPages
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./ManageUser");
         }
 
-        private bool ProductExists(int id)
+        private bool UserExists(int id)
         {
-          return (_context.Product?.Any(e => e.ProductId == id)).GetValueOrDefault();
+          return (_context.User?.Any(e => e.UserId == id)).GetValueOrDefault();
         }
     }
 }

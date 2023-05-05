@@ -1,0 +1,33 @@
+@page
+@model TheJawaShop.Pages.AdminPages.DeleteUser
+
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this user?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TheUser.UserName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TheUser.UserName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TheUser.UserPassword)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TheUser.UserPassword)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="TheUser.UserId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./ManageUser">Back to Users</a>
+    </form>
+</div>

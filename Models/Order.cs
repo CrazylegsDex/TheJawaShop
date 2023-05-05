@@ -1,8 +1,8 @@
 /*
     This class contains the attributes for a Order in the database.
     Each order contains the OrderId, the date the order was placed,
-    the user associated with the order and the products contains in
-    the order.
+    the price of the order, the user associated with the order and
+    the products contained in the order.
 
     Author: Dexter Downey
     Date: 05-03-2023
@@ -20,6 +20,10 @@ namespace TheJawaShop.Models
         [Display (Name = "Date")]
         [DataType (DataType.DateTime)]
         public DateTime OrderDate { get; set; }
+
+        [Display (Name = "Price")]
+        [DataType (DataType.Currency)]
+        public int OrderPrice { get; set; }
 
         // Foreign key to User
         public int UserId { get; set; }
