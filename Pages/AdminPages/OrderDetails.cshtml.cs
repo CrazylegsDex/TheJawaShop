@@ -20,20 +20,25 @@ namespace TheJawaShop.Pages.AdminPages
 
         public IList<Order> TheOrder { get;set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public int AdminUserId { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int ThisUserId, int AdminId)
         {
+            // Set the AdminUserId
+            AdminUserId = AdminId;
+
             // Check if the user has any orders to view
-            User TheUser = _context.User.Where(i => i.UserId == id).SingleOrDefault()!;
+            User TheUser = _context.User.Where(i => i.UserId == ThisUserId).SingleOrDefault()!;
             if (TheUser.Orders.Count() == 0)
             {
                 // Empty orders, redirect back to home
-                return RedirectToPage("./ManageUser");
+                return RedirectToPage("./ManageUser", new { id = AdminUserId });
             }
 
             if (_context.Order != null && _context.ProductOrder != null)
             {
                 TheOrder = await _context.Order.Include(o => o.ProductOrders)
-                                .ThenInclude(p => p.Product).Where(i => i.UserId == id).ToListAsync();
+                                .ThenInclude(p => p.Product).Where(i => i.UserId == ThisUserId).ToListAsync();
             }
 
             return Page();

@@ -10,6 +10,7 @@
 <table class="table">
     <thead>
         <tr>
+            <!-- Table headings for Order#, Date and Cost of the Order -->
             <th>
                 Order Number
             </th>
@@ -24,6 +25,7 @@
     </thead>
     <tbody>
     @foreach (var order in Model.TheOrder) {
+        <!-- Order Table body information -->
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => order.OrderId)
@@ -38,6 +40,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <!-- Order Header for the specific products in the order -->
                     <th>
                         Product Name
                     </th>
@@ -50,6 +53,7 @@
             <tbody>
             @foreach (var product in order.ProductOrders) {
             <tr>
+                <!-- Product body information -->
                 <td>
                     @Html.DisplayFor(modelItem => product.Product.ProductName)
                 </td>
@@ -63,4 +67,4 @@
     }
     </tbody>
 </table>
-<p><a asp-page="ManageUser">Back to Users</a>
+<a asp-page="ManageUser" asp-route-id="@Model.AdminUserId">Back to Users</a>

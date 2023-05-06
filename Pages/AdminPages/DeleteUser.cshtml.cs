@@ -21,14 +21,16 @@ namespace TheJawaShop.Pages.AdminPages
         [BindProperty]
       public User TheUser { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+      public int AdminUserId { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int ThisUserId, int AdminId)
         {
-            if (id == null || _context.User == null)
+            if (_context.User == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.User.FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await _context.User.FirstOrDefaultAsync(m => m.UserId == ThisUserId);
 
             if (user == null)
             {
@@ -37,6 +39,7 @@ namespace TheJawaShop.Pages.AdminPages
             else 
             {
                 TheUser = user;
+                AdminUserId = AdminId;
             }
             return Page();
         }
@@ -56,7 +59,8 @@ namespace TheJawaShop.Pages.AdminPages
                 await _context.SaveChangesAsync();
             }
 
-            return RedirectToPage("./ManageUser");
+            User adminUser = _context.User.Where(i => i.UserName == "admin").SingleOrDefault()!;
+            return RedirectToPage("./ManageUser", new { id = adminUser.UserId });
         }
     }
 }

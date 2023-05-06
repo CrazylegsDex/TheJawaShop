@@ -26,8 +26,7 @@
     </dl>
     
     <form method="post">
-        <input type="hidden" asp-for="TheUser.UserId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="./ManageUser">Back to Users</a>
+        <input type="submit" asp-route-id="@Model.TheUser.UserId" value="Delete" class="btn btn-danger" /> |
+        <a asp-page="./ManageUser" asp-route-id="@Model.AdminUserId">Back to Users</a>
     </form>
 </div>

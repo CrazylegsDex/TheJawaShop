@@ -7,7 +7,8 @@
 
 <h1>User Management</h1>
 
-<p><a asp-page="CreateUser">Add New User</a>
+<p><a asp-page="CreateUser" asp-route-id="@Model.AdminUserId">Add New User</a>
+<!-- Table with the Users, their orders and the cost of the orders -->
 <table class="table">
     <thead>
         <tr>
@@ -24,7 +25,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var user in Model.TheUser) {
+    <!-- Display the Data for each column -->
+    @foreach (var user in Model.TheUser) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => user.UserName)
@@ -34,21 +36,21 @@
             </td>
             <td>
                 @{
-                    int total = 0;
+                    decimal total = 0;
                     foreach (var transaction in user.Orders)
                         total += transaction.OrderPrice;
-                    @total;
+                    @total.ToString("C"); // Currency formatting, total of this user's orders
                 }
             </td>
             <td>
-                <a asp-page="./EditUser" asp-route-id="@user.UserId">Edit User</a> |
-                <a asp-page="./OrderDetails" asp-route-id="@user.UserId">View Orders</a> |
-                <a asp-page="./DeleteUser" asp-route-id="@user.UserId">Delete User</a>
+                <a asp-page="./EditUser" asp-route-ThisUserId="@user.UserId" asp-route-AdminId="@Model.AdminUserId">Edit User</a> |
+                <a asp-page="./OrderDetails" asp-route-ThisUserId="@user.UserId" asp-route-AdminId="@Model.AdminUserId">View Orders</a> |
+                <a asp-page="./DeleteUser" asp-route-ThisUserId="@user.UserId" asp-route-AdminId="@Model.AdminUserId">Delete User</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
 <div>
-    <a asp-page="./Index">Back to Admin Page</a>
+    <a asp-page="./Index" asp-route-id="@Model.AdminUserId">Back to Admin Page</a>
 </div>
