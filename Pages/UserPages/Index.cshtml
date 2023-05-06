@@ -1,0 +1,44 @@
+@page 
+@model TheJawaShop.Pages.UserPages.IndexModel
+
+@{ ViewData["Title"] = "TheJawaShop"; }
+
+<h1>Putta na nolia. Hi chuba da nage?</h1>
+<p><i>Hello there, what do you want?</i></p>
+<hr />
+
+<div>
+    <a asp-page="OrderHistory" asp-route-id="@Model.ThisUserId">Order History</a> |
+    <a asp-page="Checkout" asp-route-id="@Model.ThisUserId">Checkout</a> |
+    <a asp-page="./../Index">Logout</a>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <!-- Headers to the columns -->
+            <th>@Html.DisplayNameFor(modelItem => modelItem.Product[0].ProductName)</th>
+            <th>@Html.DisplayNameFor(modelItem => modelItem.Product[0].ProductPrice)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Product)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
+            <td>@Html.DisplayFor(modelItem => item.ProductPrice)</td>
+            <td>
+                <!-- Button must be inside post method to run OnPost code -->
+                <!-- Route the product id to add to the user's cart -->
+                <form method="post">
+                    <div class="form-group">
+                        <input type="submit" asp-page-handler="AddToCart"
+                               asp-route-ProdId="@item.ProductId" asp-route-UserId="@Model.ThisUserId"
+                               value="Add To Cart" class="btn btn-primary" />
+                    </div>
+                </form>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

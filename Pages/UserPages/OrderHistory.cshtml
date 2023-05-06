@@ -1,0 +1,70 @@
+@page 
+@model TheJawaShop.Pages.UserPages.OrderHistory
+
+@{
+    ViewData["Title"] = "View Orders";
+}
+
+<h1>Order Details</h1>
+<a asp-page="./Index" asp-route-id="@Model.ThisUserId">Back to The Jawa Shop</a>
+<p></p>
+<!-- Display the order titles -->
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Order Date
+            </th>
+            <th>
+                Order Cost
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <!-- Display the Order information -->
+    @foreach (var order in Model.TheOrder) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => order.OrderId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.OrderDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => order.OrderPrice)
+            </td>
+        </tr>
+        <!-- Inside each order, display the products the user bought -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        Product Price
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            <!-- Product information -->
+            @foreach (var product in order.ProductOrders) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Product.ProductName)
+                </td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    }
+    </tbody>
+</table>
