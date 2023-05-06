@@ -26,8 +26,8 @@ namespace TheJawaShop.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("OrderPrice")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("OrderPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");

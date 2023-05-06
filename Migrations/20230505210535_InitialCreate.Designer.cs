@@ -11,7 +11,7 @@ using TheJawaShop.Models;
 namespace TheJawaShop.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230505044628_InitialCreate")]
+    [Migration("20230505210535_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -29,8 +29,8 @@ namespace TheJawaShop.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("OrderPrice")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("OrderPrice")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");

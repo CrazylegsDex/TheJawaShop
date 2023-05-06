@@ -41,13 +41,13 @@ public class IndexModel : PageModel
             OutputMessage = "The username or password is incorrect. Please try again.";
             return Page();
         }
-        
+
         // The user exists in the database, check if they logged in
         // as admin or normal user
-        if (validUser.UserName == "admin") // Admin user login
-            return RedirectToPage("./AdminPages/Index");
-        else // Any other user
-            return NotFound();
+        if (validUser.UserName == "admin") // Admin user login, pass the userid to onGet method
+            return RedirectToPage("./AdminPages/Index", new { id = validUser.UserId});
+        else // Any other user, pass the user's id to the onGet method
+            return RedirectToPage("./UserPages/Index", new { id = validUser.UserId });
     }
 
     // This OnPost method will add the user to the database

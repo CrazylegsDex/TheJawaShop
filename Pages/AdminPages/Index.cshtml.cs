@@ -20,13 +20,14 @@ namespace TheJawaShop.Pages.AdminPages
 
         public IList<Product> Product { get;set; } = default!;
 
-        public async Task OnGetAsync()
+        public int AdminUserId { get; set; }
+
+        public async Task OnGet(int id)
         {
-            if (_context.Product != null)
-            {
-                Product = await _context.Product
-                .Include(p => p.User).ToListAsync();
-            }
+            Product = await _context.Product.Where(i => i.UserId == id).ToListAsync();
+
+            // Set the AdminUserId
+            AdminUserId = id;
         }
     }
 }

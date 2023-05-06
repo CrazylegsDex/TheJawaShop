@@ -18,16 +18,14 @@ namespace TheJawaShop.Pages.AdminPages
             _context = context;
         }
 
-        public IActionResult OnGet()
-        {
-        ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserName");
-            return Page();
-        }
+        public int AdminUserId { get; set; }
+
+        // Set the AdminUserId and return
+        public IActionResult OnGet(int id) { AdminUserId = id; return Page(); }
 
         [BindProperty]
         public Product Product { get; set; } = default!;
         
-
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
@@ -42,7 +40,7 @@ namespace TheJawaShop.Pages.AdminPages
             _context.Product.Add(Product);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { id = adminUser.UserId });
         }
     }
 }

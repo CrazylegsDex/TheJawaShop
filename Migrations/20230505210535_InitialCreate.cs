@@ -32,7 +32,7 @@ namespace TheJawaShop.Migrations
                     OrderId = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     OrderDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    OrderPrice = table.Column<int>(type: "INTEGER", nullable: false),
+                    OrderPrice = table.Column<decimal>(type: "TEXT", nullable: false),
                     UserId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>

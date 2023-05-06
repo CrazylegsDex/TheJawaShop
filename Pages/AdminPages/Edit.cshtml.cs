@@ -22,20 +22,25 @@ namespace TheJawaShop.Pages.AdminPages
         [BindProperty]
         public Product Product { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public int AdminUserId { get; set; }
+
+        public async Task<IActionResult> OnGetAsync(int? ProdId, int AdminId)
         {
-            if (id == null || _context.Product == null)
+            if (ProdId == null || _context.Product == null)
             {
                 return NotFound();
             }
 
-            var product =  await _context.Product.FirstOrDefaultAsync(m => m.ProductId == id);
+            var product =  await _context.Product.FirstOrDefaultAsync(m => m.ProductId == ProdId);
             if (product == null)
             {
                 return NotFound();
             }
             Product = product;
-           ViewData["UserId"] = new SelectList(_context.User, "UserId", "UserName");
+            
+            // Set the AdminUserId
+            AdminUserId = AdminId;
+
             return Page();
         }
 
@@ -64,7 +69,7 @@ namespace TheJawaShop.Pages.AdminPages
                 }
             }
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./Index", new { id = adminUser.UserId});
         }
 
         private bool ProductExists(int id)

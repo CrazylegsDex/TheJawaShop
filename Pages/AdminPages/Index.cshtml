@@ -1,4 +1,4 @@
-@page
+@page 
 @model TheJawaShop.Pages.AdminPages.IndexModel
 
 @{
@@ -7,9 +7,11 @@
 
 <h1>Website Management</h1>
 
-<p><a asp-page="Create">Add New Product</a> |
-   <a asp-page="ManageUser">Manage Users</a></p> |
-   <a asp-page="./../Index">Logout</a>
+<div>
+    <a asp-page="Create" asp-route-id="@Model.AdminUserId">Add New Product</a> |
+    <a asp-page="ManageUser" asp-route-id="@Model.AdminUserId">Manage Users</a> |
+    <a asp-page="./../Index">Logout</a>
+</div>
 <table class="table">
     <thead>
         <tr>
@@ -32,9 +34,10 @@
                 @Html.DisplayFor(modelItem => item.ProductPrice)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ProductId">Delete</a>
+                <!-- Route the ProductId and the AdminUserId to the models -->
+                <a asp-page="./Edit" asp-route-ProdId="@item.ProductId" asp-route-AdminId="@Model.AdminUserId">Edit</a> |
+                <a asp-page="./Details" asp-route-ProdId="@item.ProductId" asp-route-AdminId="@Model.AdminUserId">Details</a> |
+                <a asp-page="./Delete" asp-route-ProdId="@item.ProductId" asp-route-AdminId="@Model.AdminUserId">Delete</a>
             </td>
         </tr>
 }

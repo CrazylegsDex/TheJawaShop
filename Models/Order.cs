@@ -23,7 +23,7 @@ namespace TheJawaShop.Models
 
         [Display (Name = "Price")]
         [DataType (DataType.Currency)]
-        public int OrderPrice { get; set; }
+        public decimal OrderPrice { get; set; }
 
         // Foreign key to User
         public int UserId { get; set; }
