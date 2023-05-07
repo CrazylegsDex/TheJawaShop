@@ -11,8 +11,8 @@ namespace TheJawaShop.Models
     public class ProductOrder
     {
         // Primary key is a combination of Foreign keys
-        public int ProductId { get; set; }
         public int OrderId { get; set; }
+        public int ProductId { get; set; }
 
         // Navigation property to both classes
         public Product Product { get; set; } = default!;

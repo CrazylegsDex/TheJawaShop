@@ -71,12 +71,12 @@ namespace TheJawaShop.Migrations
                 name: "ProductOrder",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(type: "INTEGER", nullable: false),
-                    OrderId = table.Column<int>(type: "INTEGER", nullable: false)
+                    OrderId = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProductId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductOrder", x => new { x.ProductId, x.OrderId });
+                    table.PrimaryKey("PK_ProductOrder", x => new { x.OrderId, x.ProductId });
                     table.ForeignKey(
                         name: "FK_ProductOrder_Order_OrderId",
                         column: x => x.OrderId,
@@ -102,9 +102,9 @@ namespace TheJawaShop.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductOrder_OrderId",
+                name: "IX_ProductOrder_ProductId",
                 table: "ProductOrder",
-                column: "OrderId");
+                column: "ProductId");
         }
 
         /// <inheritdoc />

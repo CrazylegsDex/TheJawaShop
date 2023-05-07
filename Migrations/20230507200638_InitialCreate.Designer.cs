@@ -11,7 +11,7 @@ using TheJawaShop.Models;
 namespace TheJawaShop.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230505210535_InitialCreate")]
+    [Migration("20230507200638_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -68,15 +68,15 @@ namespace TheJawaShop.Migrations
 
             modelBuilder.Entity("TheJawaShop.Models.ProductOrder", b =>
                 {
-                    b.Property<int>("ProductId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("ProductId", "OrderId");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("INTEGER");
 
-                    b.HasIndex("OrderId");
+                    b.HasKey("OrderId", "ProductId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("ProductOrder");
                 });

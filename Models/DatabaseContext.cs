@@ -18,7 +18,7 @@ namespace TheJawaShop.Models
         // Configuration for EFCore to understand the Many-Many relationship
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ProductOrder>().HasKey(p => new { p.ProductId, p.OrderId });
+            modelBuilder.Entity<ProductOrder>().HasKey(p => new { p.OrderId, p.ProductId });
         }
 
         // Each Entity class gets its own DbSet
