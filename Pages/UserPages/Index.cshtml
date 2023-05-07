@@ -12,6 +12,7 @@
     <a asp-page="Checkout" asp-route-id="@Model.ThisUserId">Checkout</a> |
     <a asp-page="./../Index">Logout</a>
 </div>
+<p></p><p>@Model.DisplayMessage</p>
 <table class="table">
     <thead>
         <tr>
@@ -28,13 +29,16 @@
             <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
             <td>@Html.DisplayFor(modelItem => item.ProductPrice)</td>
             <td>
-                <!-- Button must be inside post method to run OnPost code -->
-                <!-- Route the product id to add to the user's cart -->
+                <!-- Buttons must be inside post method to run OnPost code -->
+                <!-- Route the product id to add and remove from the user's cart -->
                 <form method="post">
                     <div class="form-group">
                         <input type="submit" asp-page-handler="AddToCart"
                                asp-route-ProdId="@item.ProductId" asp-route-UserId="@Model.ThisUserId"
                                value="Add To Cart" class="btn btn-primary" />
+                        <input type="submit" asp-page-handler="RemoveFromCart"
+                               asp-route-ProdId="@item.ProductId" asp-route-UserId="@Model.ThisUserId"
+                               value="Remove From Cart" class="btn btn-primary" />
                     </div>
                 </form>
             </td>

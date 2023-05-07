@@ -29,7 +29,7 @@ public class OrderHistory : PageModel
     public IActionResult OnGet(int id)
     {
         // Check if the user has any orders to view
-        User TheUser = _context.User.Where(i => i.UserId == id).SingleOrDefault()!;
+        User TheUser = _context.User.Where(i => i.UserId == id).Include(o => o.Orders).SingleOrDefault()!;
         if (TheUser.Orders.Count() == 0)
         {
             // Empty orders, redirect back to home

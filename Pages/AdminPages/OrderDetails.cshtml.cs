@@ -28,18 +28,16 @@ namespace TheJawaShop.Pages.AdminPages
             AdminUserId = AdminId;
 
             // Check if the user has any orders to view
-            User TheUser = _context.User.Where(i => i.UserId == ThisUserId).SingleOrDefault()!;
+            User TheUser = _context.User.Where(i => i.UserId == ThisUserId).Include(o => o.Orders).SingleOrDefault()!;
             if (TheUser.Orders.Count() == 0)
             {
                 // Empty orders, redirect back to home
                 return RedirectToPage("./ManageUser", new { id = AdminUserId });
             }
 
-            if (_context.Order != null && _context.ProductOrder != null)
-            {
-                TheOrder = await _context.Order.Include(o => o.ProductOrders)
-                                .ThenInclude(p => p.Product).Where(i => i.UserId == ThisUserId).ToListAsync();
-            }
+            // Assign the user's order from the database
+            TheOrder = await _context.Order.Include(o => o.ProductOrders)
+                            .ThenInclude(p => p.Product).Where(i => i.UserId == ThisUserId).ToListAsync();
 
             return Page();
         }

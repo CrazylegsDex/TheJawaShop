@@ -23,11 +23,17 @@
                 <span asp-validation-for="CardNumber" class="text-danger"></span>
             </div>
             <p></p>
+                <!-- User Button Selection for purchase or cancel -->
+                <input type="submit" asp-page-handler="Cancel" asp-route-id="@Model.TheUser.UserId"
+                       value="Cancel Purchase" class="btn btn-primary" />
+                <input type="submit" asp-page-handler="Purchase" asp-route-id="@Model.TheUser.UserId"
+                       value="Purchase Items" class="btn btn-primary" />
         </form>
     </div>
 </div>
 
 <!-- Table shows the products the user bought -->
+<p></p>
 <table class="table">
     <thead>
         <tr>
@@ -51,23 +57,13 @@
 
 <!-- Give the user the total cost of their order -->
 @{
-    decimal TotalCost = 0;
+    decimal Total = 0;
     foreach (var item in Model.TheUser.Products)
-        TotalCost += item.ProductPrice;
+        Total += item.ProductPrice;
 
     // Format the total cost with currency formatting
-    <h4>The total cost of today's order is: @TotalCost.ToString("C")</h4>
+    <h4>The total cost of today's order is: @Total.ToString("C") Republic Credits</h4>
 }
-<form method="post">
-    <!-- Right align buttons  style="text-align:right;margin-right:0px;"-->
-    <div class="form-group">
-        <!-- Buttons to cancel and purchase items, route the UserId to both -->
-        <input type="submit" asp-page-handler="Cancel" asp-route-id="@Model.TheUser.UserId"
-               value="Cancel Purchase" class="btn btn-primary" /> |
-        <input type="submit" asp-page-handler="Purchase" asp-route-id="@Model.TheUser.UserId"
-               value="Purchase Items" class="btn btn-primary" />
-    </div>
-</form>
 
 <!-- Javascript script that is called for validation -->
 @section Scripts { @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); } }

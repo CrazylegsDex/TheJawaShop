@@ -7,64 +7,49 @@
 
 <h1>Order Details</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <!-- Table headings for Order#, Date and Cost of the Order -->
-            <th>
-                Order Number
-            </th>
-            <th>
-                Order Date
-            </th>
-            <th>
-                Order Cost
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var order in Model.TheOrder) {
-        <!-- Order Table body information -->
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => order.OrderId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => order.OrderDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => order.OrderPrice)
-            </td>
-        </tr>
-        <table class="table">
-            <thead>
-                <tr>
-                    <!-- Order Header for the specific products in the order -->
-                    <th>
-                        Product Name
-                    </th>
-                    <th>
-                        Product Price
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
+<!-- Loop through each order -->
+@{
+    int OrderNumber = 1;
+    foreach (var order in Model.TheOrder)
+    {
+        <table class="table table-primary">
+            <thead><tr>
+                    <!-- Table headings for Order#, Date and Total Cost of the Order -->
+                    <th> Order Number </th>
+                    <th> Order Date </th>
+                    <th> Order Cost </th>
+            </tr></thead>
             <tbody>
-            @foreach (var product in order.ProductOrders) {
-            <tr>
-                <!-- Product body information -->
-                <td>
-                    @Html.DisplayFor(modelItem => product.Product.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Product.ProductName)
-                </td>
-            </tr>
-            }
+                <tr class="table-secondary">
+                    <!-- Display the Order information -->
+                    <td> @Html.DisplayFor(modelItem => @OrderNumber) </td>
+                    <td> @Html.DisplayFor(modelItem => order.OrderDate) </td>
+                    <td> @Html.DisplayFor(modelItem => order.OrderPrice) </td>
+                </tr>
+                <tr><td colspan="4">
+                <table class="table table-success mb-0">
+                    <thead><tr>
+                            <!-- Inside each order, display the products name and price -->
+                            <th> Product Name </th>
+                            <th> Product Price </th>
+                    </tr></thead>
+                    <tbody>
+                    <!-- Loop through each product in this order -->
+                    @foreach (var product in order.ProductOrders)
+                    {
+                        <tr class="table-secondary">
+                            <td> @Html.DisplayFor(modelItem => product.Product.ProductName) </td>
+                            <td> @Html.DisplayFor(modelItem => product.Product.ProductPrice) </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                </td></tr>
             </tbody>
         </table>
+        <hr />
+        ++OrderNumber;
     }
-    </tbody>
-</table>
+}
+<p></p>
 <a asp-page="ManageUser" asp-route-id="@Model.AdminUserId">Back to Users</a>
