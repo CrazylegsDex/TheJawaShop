@@ -46,8 +46,8 @@ public class IndexModel : PageModel
         // as admin or normal user
         if (validUser.UserName == "admin") // Admin user login, pass the userid to onGet method
             return RedirectToPage("./AdminPages/Index", new { id = validUser.UserId});
-        else // Any other user, pass the user's id to the onGet method
-            return RedirectToPage("./UserPages/Index", new { id = validUser.UserId });
+        else // Any other user, pass the user's id and the search string to the onGet method
+            return RedirectToPage("./UserPages/Index", new { id = validUser.UserId, SearchItem = string.Empty });
     }
 
     // This OnPost method will add the user to the database

@@ -17,9 +17,46 @@
     <thead>
         <tr>
             <!-- Headers to the columns -->
-            <th>@Html.DisplayNameFor(modelItem => modelItem.Product[0].ProductName)</th>
-            <th>@Html.DisplayNameFor(modelItem => modelItem.Product[0].ProductPrice)</th>
-            <th></th>
+            <!-- Link each header with the ability to sort on Ascending and Descending -->
+            @{
+                string NameSort = "Name_Ascending";
+                if (Model.CurrentSort == "Name_Ascending")
+                    NameSort = "Name_Descending";
+
+                <th>
+                    <a asp-page="./Index"
+                        asp-route-id="@Model.ThisUserId"
+                        asp-route-CurrentPageNum="@Model.CurrentPageNum"
+                        asp-route-TotalProducts="@Model.TotalProducts"
+                        asp-route-CurrentSort="@NameSort"
+                        asp-route-SearchString="@Model.SearchString"
+                    >@Html.DisplayNameFor(modelItem => modelItem.Product[0].ProductName)</a>
+                </th>
+                <th>@Html.DisplayNameFor(modelItem => modelItem.Product[0].ProductPrice)</th>
+                <th>
+                    <form method="post" asp-page="./Index">
+                        <div class="form-group" >
+                            Search for a Product:
+                                <!-- asp-route-SearchValue="Model.SearchString" -->
+                            <input type="text" name="SearchValue" value="@Model.SearchString"/>
+                            <input type="submit"
+                                asp-page-handler="FindProduct"
+                                asp-route-UserId="@Model.ThisUserId"
+                                asp-route-PageNum="@Model.CurrentPageNum"
+                                asp-route-Total="@Model.TotalProducts"
+                                asp-route-SortValue="@Model.CurrentSort"
+                            value="Search" class="btn btn-primary btn-sm"/> |
+                            <a asp-page="./Index"
+                                asp-route-id="@Model.ThisUserId"
+                                asp-route-CurrentPageNum="@Model.CurrentPageNum"
+                                asp-route-TotalProducts="@Model.TotalProducts"
+                                asp-route-CurrentSort="@Model.CurrentSort"
+                                asp-route-SearchString=""
+                            >Reset Search Filter</a>
+                        </div>
+                    </form>
+                </th>
+            }
         </tr>
     </thead>
     <tbody>
@@ -29,16 +66,28 @@
             <td>@Html.DisplayFor(modelItem => item.ProductName)</td>
             <td>@Html.DisplayFor(modelItem => item.ProductPrice)</td>
             <td>
-                <!-- Buttons must be inside post method to run OnPost code -->
-                <!-- Route the product id to add and remove from the user's cart -->
-                <form method="post">
+                <!-- Buttons link to On-Post methods -->
+                <!-- Route each parameter in the page also with each button press -->
+                <form method="post" asp-page="./Index">
                     <div class="form-group">
-                        <input type="submit" asp-page-handler="AddToCart"
-                               asp-route-ProdId="@item.ProductId" asp-route-UserId="@Model.ThisUserId"
-                               value="Add To Cart" class="btn btn-primary" />
-                        <input type="submit" asp-page-handler="RemoveFromCart"
-                               asp-route-ProdId="@item.ProductId" asp-route-UserId="@Model.ThisUserId"
-                               value="Remove From Cart" class="btn btn-primary" />
+                        <input type="submit"
+                            asp-page-handler="AddToCart"
+                            asp-route-ProdId="@item.ProductId"
+                            asp-route-UserId="@Model.ThisUserId"
+                            asp-route-PageNum="@Model.CurrentPageNum"
+                            asp-route-Total="@Model.TotalProducts"
+                            asp-route-SortValue="@Model.CurrentSort"
+                            asp-route-SearchValue="@Model.SearchString"
+                        value="Add To Cart" class="btn btn-primary btn-sm"/>
+                        <input type="submit"
+                            asp-page-handler="RemoveFromCart"
+                            asp-route-ProdId="@item.ProductId"
+                            asp-route-UserId="@Model.ThisUserId"
+                            asp-route-PageNum="@Model.CurrentPageNum"
+                            asp-route-Total="@Model.TotalProducts"
+                            asp-route-SortValue="@Model.CurrentSort"
+                            asp-route-SearchValue="@Model.SearchString"
+                        value="Remove From Cart" class="btn btn-primary btn-sm"/>
                     </div>
                 </form>
             </td>
@@ -46,3 +95,40 @@
     }
     </tbody>
 </table>
+<hr />
+@{
+    // Code to check the page number disabling
+    string previousPage = "active";
+    string nextPage = "active";
+    if (Model.CurrentPageNum <= 1) // Pages start at 1
+        previousPage = "disabled";
+
+    // Disable the Next Button if skipped products exceeds available products
+    if ((Model.CurrentPageNum * 10) >= Model.TotalProducts)
+        nextPage = "disabled";
+
+    // The follwing code includes two link buttons for paging
+    // The following code also includes four routing parameters for keeping page information
+    <nav aria-label="Table Paging for the Jawa Shop">
+        <ul class="pagination justify-content-end">
+            <li class="page-item @previousPage">
+                <a class="page-link" asp-page="./Index"
+                    asp-route-id="@Model.ThisUserId"
+                    asp-route-CurrentPageNum="@(Model.CurrentPageNum - 1)"
+                    asp-route-TotalProducts="@Model.TotalProducts"
+                    asp-route-CurrentSort="@Model.CurrentSort"
+                    asp-route-SearchString="@Model.SearchString"
+                >Previous Page</a>
+            </li>
+            <li class="page-item @nextPage">
+                <a class="page-link" asp-page="./Index"
+                    asp-route-id="@Model.ThisUserId"
+                    asp-route-CurrentPageNum="@(Model.CurrentPageNum + 1)"
+                    asp-route-TotalProducts="@Model.TotalProducts"
+                    asp-route-CurrentSort="@Model.CurrentSort"
+                    asp-route-SearchString="@Model.SearchString"
+                >Next Page</a>
+            </li>
+        </ul>
+    </nav>
+}

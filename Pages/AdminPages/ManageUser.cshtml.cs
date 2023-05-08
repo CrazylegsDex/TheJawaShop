@@ -24,9 +24,9 @@ namespace TheJawaShop.Pages.AdminPages
 
         public async Task OnGetAsync(int id)
         {
-            TheUser = await _context.User.Include(o => o.Orders).ToListAsync();
+            TheUser = await _context.User.Where(u => u.UserName != "admin").Include(o => o.Orders).ToListAsync();
 
-            // Set AdminUserId
+            // Set AdminUserId and return
             AdminUserId = id;
         }
     }

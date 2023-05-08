@@ -41,7 +41,7 @@ public class Checkout : PageModel
         // Check for items in the User's cart. Return if empty and send the user's id to index
         if (TheUser.Products.Count() == 0)
         {
-            return RedirectToPage("./Index", new { id = TheUser.UserId });
+            return RedirectToPage("./Index", new { id = TheUser.UserId, SearchItem = string.Empty });
         }
 
         return Page();
@@ -54,7 +54,7 @@ public class Checkout : PageModel
     {
         // Re-assign user for ID back to index
         TheUser = _context.User.Where(i => i.UserId == id).SingleOrDefault()!;
-        return RedirectToPage("./Index", new { id = TheUser.UserId });
+        return RedirectToPage("./Index", new { id = TheUser.UserId, SearchItem = string.Empty });
     }
 
     // This method will "purchase" the user's items. This method will
@@ -121,6 +121,6 @@ public class Checkout : PageModel
         TheUser.Products.Clear();
         _context.SaveChanges();
 
-        return RedirectToPage("./Index", new { id = TheUser.UserId });
+        return RedirectToPage("./Index", new { id = TheUser.UserId, SearchItem = string.Empty });
     }
 }

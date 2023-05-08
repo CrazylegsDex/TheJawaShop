@@ -33,7 +33,7 @@ public class OrderHistory : PageModel
         if (TheUser.Orders.Count() == 0)
         {
             // Empty orders, redirect back to home
-            return RedirectToPage("./Index", new { id = TheUser.UserId });
+            return RedirectToPage("./Index", new { id = TheUser.UserId, SearchItem = string.Empty });
         }
 
         // Assign the user's order from the database

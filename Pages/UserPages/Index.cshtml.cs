@@ -14,8 +14,13 @@ public class IndexModel : PageModel
     private readonly DatabaseContext _context;
     private readonly ILogger<IndexModel> _logger;
 
-    [BindProperty] public int ThisUserId { get; set; }
+    [BindProperty (SupportsGet = true)] public int ThisUserId { get; set; }
+    [BindProperty (SupportsGet = true)] public int CurrentPageNum { get; set; } = 1;
+    [BindProperty (SupportsGet = true)] public int TotalProducts { get; set; } = 0;
+    [BindProperty (SupportsGet = true)] public string CurrentSort { get; set; } = string.Empty;
+    [BindProperty (SupportsGet = true)] public string SearchString { get; set; } = string.Empty;
     [BindProperty] public List<Product> Product { get; set; } = default!;
+    public int PageSize { get; set; } = 10;
     public string DisplayMessage { get; set; } = string.Empty;
 
     public IndexModel(DatabaseContext context, ILogger<IndexModel> logger)
@@ -24,15 +29,43 @@ public class IndexModel : PageModel
         _logger = logger;
     }
 
-    // Get the list of products from Admin User to show to the
-    // current user. Set "ThisUserId" to id for routing
-    public void OnGet(int id)
+    // Set the SearchString variable from OnGet parameters.
+    // Call SetProperties function to get the product list.
+    public void OnGet(int id, string SearchItem)
     {
+        SearchString = SearchItem;
         SetProperties(id);
     }
 
+    // This method tests if the product the user is searching for is found in the database.
+    // If the product is found, this method sets the SearchString variable. Else, this method
+    // displays to the user the product was not found.
+    public void OnPostFindProduct(int UserId, int PageNum, int Total, string SortValue, string SearchValue)
+    {
+        if (!String.IsNullOrEmpty(SearchValue))
+        {
+            // Get a query for all products in the database and see if the search value is in it
+            var testQuery = _context.Product.Where(n => n.ProductName.Contains(SearchValue)
+                            || n.ProductPrice.ToString().Contains(SearchValue));
+            
+            if (testQuery.Count() > 0)
+                SearchString = SearchValue;
+            else
+            {
+                SearchString = "";
+                DisplayMessage = "Product could not be found.";
+            }
+        }
+
+        // Set the list of products and url items again for return
+        CurrentPageNum = PageNum;
+        TotalProducts = Total;
+        CurrentSort = SortValue;
+        SetProperties(UserId);
+    }
+
     // This method adds the selected product to the user's cart
-    public IActionResult OnPostAddToCart(int ProdId, int UserId)
+    public void OnPostAddToCart(int ProdId, int UserId, int PageNum, int Total, string SortValue, string SearchValue)
     {
         // Get the current product and the current user
         Product CurrentProduct = _context.Product.Where(i => i.ProductId == ProdId).SingleOrDefault()!;
@@ -51,13 +84,16 @@ public class IndexModel : PageModel
         DisplayMessage = newProduct.ProductName + " has been added to the cart.";
         _context.SaveChanges();
 
-        // Set the properties again and return back to this page
+        // Set the list of products and url items again for return
+        CurrentPageNum = PageNum;
+        TotalProducts = Total;
+        CurrentSort = SortValue;
+        SearchString = SearchValue;
         SetProperties(UserId);
-        return Page();
     }
 
     // This method removes the selected product from the user's cart
-    public IActionResult OnPostRemoveFromCart(int ProdId, int UserId)
+    public void OnPostRemoveFromCart(int ProdId, int UserId, int PageNum, int Total, string SortValue, string SearchValue)
     {
         // Get the product the user wants to remove
         Product AdminProduct = _context.Product.Where(i => i.ProductId == ProdId).SingleOrDefault()!;
@@ -74,17 +110,54 @@ public class IndexModel : PageModel
         else
             DisplayMessage = "This product is not in your cart and cannot be removed.";
 
-        // Set the properties again and return back to this page
+        // Set the list of products and url items again for return
+        CurrentPageNum = PageNum;
+        TotalProducts = Total;
+        CurrentSort = SortValue;
+        SearchString = SearchValue;
         SetProperties(UserId);
-        return Page();
     }
 
-    // This function sets ThisUser and Product properties to prevent from being null when the page returns
+    // This function, SetProperties, primarily sets the Product
+    // variable with the correct items to show the user when they
+    // load/reload the page. This function will also Sort, Search
+    // and get proper paging information
     public void SetProperties(int userId)
     {
-        // Get the admin user who holds all the available products
-        User AdminUser = _context.User.Where(a => a.UserName == "admin").SingleOrDefault()!;
-        Product = _context.Product.Where(i => i.UserId == AdminUser.UserId).ToList(); // Get the Products
+        // Get the Admin User's id for product selection, then select all products from the Admin
+        var AdminId = _context.User.Where(n => n.UserName == "admin").SingleOrDefault()!;
+        var query = _context.Product.Select(p => p).Where(i => i.UserId == AdminId.UserId);
+
+        // If the Search String is not Empty/null, search for items
+        // containing that specific name. The query will not result
+        // in null due to the check done in FindProduct
+        if (!String.IsNullOrEmpty(SearchString))
+            query = query.Where(n => n.ProductName.Contains(SearchString) || n.ProductPrice.ToString().Contains(SearchString));
+
+        // Update the query based on the user's sort preferences
+        // 
+        // NOTE: Cannot use sorting on ProductPrice.
+        // ERROR: SQLite does not support expressions of type 'decimal' in ORDER BY clauses.
+        // REASON: SQLite has no decimal type, only FLOAT.
+        //         It's a very limited database, with only four data types.
+        switch (CurrentSort)
+        {
+            case "Name_Ascending":
+                query = query.OrderBy(n => n.ProductName);
+                break;
+
+            case "Name_Descending":
+                query = query.OrderByDescending(n => n.ProductName);
+                break;
+
+            default:
+                CurrentSort = "";
+                break;
+        }
+
+        // Set the TotalProducts variable and finalize the query with the page limit
+        TotalProducts = query.Count();
+        Product = query.Skip((CurrentPageNum - 1) * PageSize).Take(PageSize).ToList();
 
         // Set the UserId for this webpage
         ThisUserId = userId;
